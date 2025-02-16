@@ -10,10 +10,8 @@ import java.nio.file.Paths;
 
 public class ASTParser {
     public static void parseFile(String filePath) throws Exception {
-        // Get the project root (one level above 'app/')
         Path projectRoot = Paths.get(System.getProperty("user.dir")).getParent();
         
-        // Construct the correct absolute path
         Path path = projectRoot.resolve(filePath).toAbsolutePath();
         
         if (!Files.exists(path)) {
@@ -32,5 +30,4 @@ public class ASTParser {
             System.err.println("Failed to parse the Java file.");
         }
     }
-    
 }
