@@ -20,6 +20,9 @@ dependencies {
     // This dependency is used by the application.
     implementation libs.guava
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'com.github.javaparser:javaparser-core:3.25.1'  // AST parsing
+    implementation 'org.slf4j:slf4j-simple:2.0.7'  // Logging
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'  // Testing
 
 }
 
@@ -42,5 +45,5 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.example.App'
+    mainClass = 'com.reviewer.App'
 }
