@@ -42,3 +42,26 @@ Plan milestones & use Issues/Projects on GitHub.
 Implement small features – Push frequently to practice GitHub workflows.
 Experiment with GitHub Actions – Automate static analysis on PRs.
 Would this project interest you? Or do you want something different (e.g., more web-focused, gaming, data science)? 🚀
+
+
+MLCodeReviewer/
+├── .github/                 # GitHub Actions workflows
+│   ├── workflows/
+│   │   ├── code-review.yml  # Defines GitHub Action
+│   │   ├── tests.yml        # Runs tests on PRs
+│   ├── action/              # Custom GitHub Action (JS or Docker)
+├── src/                     # Main application code
+│   ├── main/java/com/reviewer/
+│   │   ├── CodeAnalyzer.java  # Core analysis logic
+│   │   ├── ASTParser.java     # AST-based parsing
+│   │   ├── RuleEngine.java    # Rules for suggestions
+│   ├── test/java/com/reviewer/
+│   │   ├── CodeAnalyzerTest.java
+│   │   ├── ASTParserTest.java
+├── model/                   # ML-related code (future)
+├── data/                    # Sample Java code for testing
+├── scripts/                 # Helper scripts
+├── README.md
+├── build.gradle
+├── settings.gradle
+├── .gitignore

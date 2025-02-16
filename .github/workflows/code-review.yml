@@ -1,19 +1,25 @@
 name: Code Review
-on: [pull_request]
+
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   review:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
           java-version: '17'
 
-      - name: Build and Run Code Review
-        run: |
-          ./gradlew run
+      - name: Build project
+        run: ./gradlew build
+
+      - name: Run code review
+        run: java -jar build/libs/MLCodeReviewer.jar src/main/java/com/reviewer/SampleCode.java
