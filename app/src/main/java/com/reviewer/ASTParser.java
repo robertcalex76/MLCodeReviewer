@@ -9,14 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ASTParser {
-    public static void parseFile(String filePath) throws Exception {
-        Path projectRoot = Paths.get(System.getProperty("user.dir")).getParent();
-        
-        Path path = projectRoot.resolve(filePath).toAbsolutePath();
+    public static CompilationUnit parseFile(String filePath) throws Exception {
+        Path path = Paths.get(filePath).toAbsolutePath();
+        System.out.println("Resolved file path: " + path);
         
         if (!Files.exists(path)) {
             System.err.println("File not found: " + path);
-            return;
+            return null;
         }
     
         String code = new String(Files.readAllBytes(path));
@@ -29,5 +28,6 @@ public class ASTParser {
         } else {
             System.err.println("Failed to parse the Java file.");
         }
+        return cu;
     }
 }

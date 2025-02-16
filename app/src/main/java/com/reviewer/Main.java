@@ -3,12 +3,24 @@
  */
 package com.reviewer;
 
+import com.github.javaparser.ast.CompilationUnit;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println(getGreeting());
+        if (args.length != 1) {
+            System.err.println("Usage: java -jar MLCodeReviewer.jar <path-to-java-file>");
+            System.exit(1);
+        }
 
+        String filePath = args[0];
         try {
-            ASTParser.parseFile("data/SampleCode.java");
+            CompilationUnit cu = ASTParser.parseFile(filePath);
+            if (cu != null) {
+                CodeAnalyzer analyzer = new CodeAnalyzer();
+                analyzer.analyze(cu);
+            } else {
+                System.err.println("Failed to parse the Java file.");
+            }
         } catch (Exception e) {
             System.err.println("Error parsing file: " + e.getMessage());
         }

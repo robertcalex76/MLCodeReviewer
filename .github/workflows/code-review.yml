@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: Build project
-        run: ./gradlew build
+        run: ./gradlew clean build
 
       - name: Run code review
         run: java -jar build/libs/MLCodeReviewer.jar src/main/java/com/reviewer/SampleCode.java
