@@ -23,4 +23,4 @@ jobs:
         run: ./gradlew clean build
 
       - name: Run code review
-        run: java -jar build/libs/MLCodeReviewer.jar src/main/java/com/reviewer/SampleCode.java
+        run: java -jar app/build/libs/MLCodeReviewer.jar src/main/java/com/reviewer/SampleCode.java
