@@ -7,9 +7,17 @@ import com.github.javaparser.ast.CompilationUnit;
 
 public class Main {
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: java -jar MLCodeReviewer.jar <path-to-java-file>");
+        try {
+            run(args);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
             System.exit(1);
+        }
+    }
+
+    public static void run(String[] args) {
+        if (args.length != 1) {
+            throw new IllegalArgumentException("Usage: java -jar MLCodeReviewer.jar <path-to-java-file>");
         }
 
         String filePath = args[0];
@@ -19,14 +27,10 @@ public class Main {
                 CodeAnalyzer analyzer = new CodeAnalyzer();
                 analyzer.analyze(cu);
             } else {
-                System.err.println("Failed to parse the Java file.");
+                throw new RuntimeException("Failed to parse the Java file.");
             }
         } catch (Exception e) {
-            System.err.println("Error parsing file: " + e.getMessage());
+            throw new RuntimeException("Error processing the file: " + filePath, e);
         }
-    }
-
-    public static String getGreeting() {
-        return "Hello, Code Reviewer!";
     }
 }

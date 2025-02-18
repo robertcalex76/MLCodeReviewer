@@ -24,16 +24,22 @@ dependencies {
 
 testing {
     suites {
-        // Configure the built-in test suite
         test {
-            // Use JUnit4 test framework
-            useJUnit('4.13.2')
+            useJUnitJupiter()
         }
     }
 }
 
+tasks.withType(Test).configureEach {
+    testLogging {
+        events = ["passed", "skipped", "failed"]
+        exceptionFormat = "full"
+        showStandardStreams = true
+    }
+}
+
 application {
-    mainClassName = 'com.reviewer.Main'
+    mainClass.set('com.reviewer.Main')
 }
 
 jar {
@@ -54,5 +60,5 @@ tasks.named('startScripts') {
 }
 
 build {
-    dependsOn jar
+    dependsOn test
 }
