@@ -1,8 +1,17 @@
 package com.reviewer;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.DoubleLiteralExpr;
+import com.github.javaparser.ast.expr.IntegerLiteralExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.TryStmt;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RuleEngine {
     public void applyRules(MethodDeclaration method) {
@@ -38,11 +47,33 @@ public class RuleEngine {
     }
 
     private void checkCommentDensity(MethodDeclaration method) {
-        // Implement logic to check comment density
+        int statementCount = method.getBody()
+                .map(b -> b.getStatements().size())
+                .orElse(0);
+        if (statementCount < 5) return;
+
+        long commentCount = method.getAllContainedComments().size();
+        if (commentCount == 0) {
+            System.out.println("Method " + method.getName()
+                    + " has no comments despite having " + statementCount + " statements.");
+        }
     }
 
     private void checkMagicNumbers(MethodDeclaration method) {
-        // Implement logic to detect magic numbers
+        method.findAll(IntegerLiteralExpr.class).forEach(literal -> {
+            int value = literal.asInt();
+            if (value != 0 && value != 1) {
+                System.out.println("Method " + method.getName()
+                        + " contains a magic number: " + value);
+            }
+        });
+        method.findAll(DoubleLiteralExpr.class).forEach(literal -> {
+            double value = literal.asDouble();
+            if (value != 0.0 && value != 1.0) {
+                System.out.println("Method " + method.getName()
+                        + " contains a magic number: " + value);
+            }
+        });
     }
 
     private void checkNestedBlockDepth(MethodDeclaration method) {
@@ -71,7 +102,20 @@ public class RuleEngine {
     }
 
     private void checkUnusedVariables(MethodDeclaration method) {
-        // Implement logic to detect unused variables
+        List<String> declaredVars = method.findAll(VariableDeclarator.class).stream()
+                .map(VariableDeclarator::getNameAsString)
+                .collect(Collectors.toList());
+
+        Set<String> usedNames = method.findAll(NameExpr.class).stream()
+                .map(NameExpr::getNameAsString)
+                .collect(Collectors.toSet());
+
+        declaredVars.forEach(varName -> {
+            if (!usedNames.contains(varName)) {
+                System.out.println("Method " + method.getName()
+                        + " has an unused variable: " + varName);
+            }
+        });
     }
 
     private void checkMethodReturnType(MethodDeclaration method) {
@@ -87,7 +131,14 @@ public class RuleEngine {
     }
 
     private void checkExceptionHandling(MethodDeclaration method) {
-        // Implement logic to check exception handling
+        method.findAll(TryStmt.class).forEach(tryStmt ->
+                tryStmt.getCatchClauses().forEach(catchClause -> {
+                    if (catchClause.getBody().getStatements().isEmpty()) {
+                        System.out.println("Method " + method.getName()
+                                + " has an empty catch block.");
+                    }
+                })
+        );
     }
 
     // Add more rule methods here

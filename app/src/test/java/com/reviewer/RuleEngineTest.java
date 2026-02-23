@@ -60,5 +60,64 @@ public class RuleEngineTest {
         // Check console output manually or use a logging framework to capture and assert the output
     }
 
+    @Test
+    public void testMagicNumbersRule() {
+        String code = "public class TestClass { " +
+                      "public int compute() { return 42; } }";
+        CompilationUnit cu = new JavaParser().parse(code).getResult().orElse(null);
+        assertNotNull(cu);
+
+        List<MethodDeclaration> methods = cu.findAll(MethodDeclaration.class);
+        assertFalse(methods.isEmpty());
+
+        ruleEngine.applyRules(methods.get(0));
+        // Should print: Method compute contains a magic number: 42
+    }
+
+    @Test
+    public void testExceptionHandlingRule() {
+        String code = "public class TestClass { " +
+                      "public void riskyMethod() { " +
+                      "try { int x = 1; } catch (Exception e) { } } }";
+        CompilationUnit cu = new JavaParser().parse(code).getResult().orElse(null);
+        assertNotNull(cu);
+
+        List<MethodDeclaration> methods = cu.findAll(MethodDeclaration.class);
+        assertFalse(methods.isEmpty());
+
+        ruleEngine.applyRules(methods.get(0));
+        // Should print: Method riskyMethod has an empty catch block.
+    }
+
+    @Test
+    public void testUnusedVariablesRule() {
+        String code = "public class TestClass { " +
+                      "public void methodWithUnused() { " +
+                      "int unused = 5; int used = 10; System.out.println(used); } }";
+        CompilationUnit cu = new JavaParser().parse(code).getResult().orElse(null);
+        assertNotNull(cu);
+
+        List<MethodDeclaration> methods = cu.findAll(MethodDeclaration.class);
+        assertFalse(methods.isEmpty());
+
+        ruleEngine.applyRules(methods.get(0));
+        // Should print: Method methodWithUnused has an unused variable: unused
+    }
+
+    @Test
+    public void testCommentDensityRule() {
+        String code = "public class TestClass { " +
+                      "public void methodWithoutComments() { " +
+                      "int a = 0; int b = 1; int c = 2; int d = 3; int e = 4; } }";
+        CompilationUnit cu = new JavaParser().parse(code).getResult().orElse(null);
+        assertNotNull(cu);
+
+        List<MethodDeclaration> methods = cu.findAll(MethodDeclaration.class);
+        assertFalse(methods.isEmpty());
+
+        ruleEngine.applyRules(methods.get(0));
+        // Should print: Method methodWithoutComments has no comments despite having 5 statements.
+    }
+
     // Add more tests for other rules
 }
